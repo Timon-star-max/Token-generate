@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import WaveAnimation from "./animate/WaveAnimation";
-import Background from "@/public/images/background/Background.svg";
+import Background from "@/public/images/background/background.svg";
 
 const Header = () => {
   return (
