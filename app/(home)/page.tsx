@@ -128,13 +128,13 @@ export default function Page() {
   }, [cardRefs]);
 
   return (
-    <Form {...form}>
-      <form>
-        <div className="bg-[#080808]">
-          <Header></Header>
+    <div className="bg-[#080808]">
+      <Header></Header>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div
             id="deploy"
-            className="flex flex-col w-full items-center justify-center min-h-screen"
+            className="relative flex flex-col w-full items-center justify-center min-h-screen"
           >
             <div className="fixed bottom-10 w-11/12 max-w-4xl h-12 flex items-center justify-center z-20">
               <div className="absolute inset-0 bg-zinc-800 blur-[1px] rounded-xl"></div>
@@ -436,7 +436,11 @@ export default function Page() {
               </CardContent>
               <CardFooter></CardFooter>
             </Card>
-            <Button ref={card4Ref} className="my-4 bg-[#38e5ff]">
+            <Button
+              ref={card4Ref}
+              className="my-4 bg-[#38e5ff]"
+              onClick={() => onSubmit}
+            >
               Deploy Token
             </Button>
             <Accordion
@@ -466,9 +470,9 @@ export default function Page() {
               </AccordionItem>
             </Accordion>
           </div>
-        </div>
-        <Footer></Footer>
-      </form>
-    </Form>
+          <Footer></Footer>
+        </form>
+      </Form>
+    </div>
   );
 }
