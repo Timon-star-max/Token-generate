@@ -54,7 +54,7 @@ import { Switch } from "@/components/ui/switch";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-export default function page() {
+export default function Page() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(1);
   const [ismint, setIsMint] = useState(false);
