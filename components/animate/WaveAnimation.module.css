@@ -1,0 +1,85 @@
+.container_pulse {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin-top: 50px;
+}
+.box_pulse {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.pulse {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid #05B7D1;
+    margin-bottom: 5em;
+}
+.pulse::before,
+.pulse::after {
+    opacity: .8;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 50%;
+    background-color: #05B7D1;
+    content: "";
+}
+.pulse::before {
+    animation: pulse-circle 2s ease-out infinite;
+}
+.pulse::after {
+    animation: pulse-circle 4s 2s ease-out infinite;
+}
+.heart {
+    width: 50%;
+    animation: pulse-heart 2s ease-in-out infinite;
+}
+.intro_text {
+    font-size: 3.5rem;
+    padding: 7px 0px;
+    color: white;
+}
+/* pulse animation of heartbeat */
+@keyframes pulse-heart {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+/* pulse animation of circle */
+@keyframes pulse-circle {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(3);
+    }
+}
+@media only screen and (max-width: 767px) {
+    .intro_text {
+        font-size: 1.5rem;
+    }
+}
+@media only screen and (min-width: 768px) and (max-width: 960px) {
+    .intro_text {
+        font-size: 2rem;
+    }
+}

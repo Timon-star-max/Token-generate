@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  display: none;
+  -webkit-box-shadow: none;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #05B7D1;
+  border-right-width: 0;
+}
+
+body {
+  scroll-behavior: smooth;
+  background-color: #080808;
+  margin: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow: overlay;
+  overflow-x: hidden;
+  margin: auto;
+}
+
+.curveBg {
+  background-image: url(/images/background/bg-hero-bottom.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  z-index: 12;
+}
+.footer-grad {
+  background: linear-gradient(90deg, #080808 63.22%, rgba(8, 8, 8, 0) 100%);
+}
+
+.opsecBtn {
+  border-radius: 6px;
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 100%
+    ),
+    #05B7D1;
+  box-shadow: 0px 4px 32px 0px rgba(255, 100, 69, 0.4),
+    0px 1px 0px 0px rgba(255, 255, 255, 0.2) inset,
+    0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.gradient-text {
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(to right, #f44336, #f44336, #ffa572, #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+#range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  height: 48px;
+  border-radius: 70px;
+  border: 1px solid #373737;
+
+  background: #292929;
+
+  box-shadow: 0px 4px 11.7px 0px rgba(0, 0, 0, 0.5) inset;
+}
+#range::-webkit-range-track {
+  background: #ee0000;
+}
+#range::-moz-range-track {
+  height: 15px;
+  background: #ee0000;
+  border-radius: 16px;
+}
+
+#range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 40px;
+  width: 40px;
+  background: transparent;
+  background-image: url("https://i.ibb.co/5TT0kxS/ball.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  transition: 0.2s ease-in-out;
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+#range::-moz-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  width: 30px;
+  background: transparent;
+  background-image: url("https://i.ibb.co/g3yntVY/3-D-Silver-Circle-1.png");
+  background-size: cover;
+  border-radius: 50%;
+  transition: 0.2s ease-in-out;
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+.footer-bg {
+  background-image: url(/images/footer/footer.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 12;
+}
+@media screen and (max-width: 700px) {
+  .footer-bg {
+    background-image: url(/images/footer/footer-mobile.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 12;
+  }
+  .curveBg {
+    display: hidden;
+    background-image: url(/images/background/bg-hero-bottom-mobile.svg);
+    background-size: fill;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    z-index: 10;
+  }
+  .img1 {
+    transform: scale(0.7);
+    left: -10px;
+    top: -2rem;
+  }
+  .img {
+    transform: scale(0.7);
+  }
+}
+.opsec-card {
+  background-image: url(/images/f-3.png);
+}
+.text-gradient {
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #ff3829, #ffcb6b);
+}

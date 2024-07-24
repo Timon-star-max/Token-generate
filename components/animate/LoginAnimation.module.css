@@ -1,0 +1,54 @@
+/* components/AnimatedSvg.module.css */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,300,500,700');
+
+@-webkit-keyframes part {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@-moz-keyframes part {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes part {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  opacity: 0.2;
+  left: 96%;
+  margin-right: -20%;
+  z-index: 8;
+  transform: translate(-50%, -50%);
+}
+
+.animatedSvg {
+  height: 120vh;
+  width: auto;
+}
+
+.animatedSvg path {
+  opacity: 0.2;
+}
+
+.animatedSvg circle {
+  -moz-animation: part 1.6s infinite ease-in-out;
+  -webkit-animation: part 1.6s infinite ease-in-out;
+  animation: part 1.6s infinite ease-in-out;
+}

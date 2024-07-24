@@ -1,0 +1,57 @@
+.connect_button_groupp {
+    display: flex;
+    gap: 12;
+  }
+  
+  .wallet_button {
+    border-radius: 20px;
+    padding: 0.5em 1em;
+    background-color: #38e5ff;
+    color: white;
+    margin-right: 0.6rem;
+  }
+  
+  .wallet_button:hover {
+    border-color: #38e5ff;
+    color: #38e5ff;
+  }
+  
+  .wallet_button:focus,
+  .wallet_button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+  
+  .button {
+    background: url("/images/wallet/connected.svg") no-repeat center;
+    width: 80px;
+    height: 80px;
+    border: none;
+    background-size: cover;
+    transition: background 0.3s ease;
+  }
+  
+  .button:hover {
+    background: url("/images/wallet/connect_hover.svg") no-repeat center;
+    background-size: cover;
+  }
+  
+  .chain-icon {
+    margin-right: 0.5rem;
+  }
+  
+  .wallet_button:hover {
+    .chain-icon {
+      opacity: 0.5;
+    }
+  }
+  
+  @media only screen and (max-width: 424px) {
+    .wallet_button {
+      padding: 0.5rem 0.4rem;
+      margin-right: 0.3rem;
+    }
+    .chain-icon {
+      margin-right: 0.4rem;
+    }
+  }
+  
