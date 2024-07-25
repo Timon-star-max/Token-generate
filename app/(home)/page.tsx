@@ -3,8 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { tokenSchema, type TokenFormValues } from "@/lib/form-schema";
-import { useAccount, useBalance } from "wagmi";
+import { baseTokenSchema, type TokenFormValues } from "@/lib/form-schema";
+import { useAccount } from "wagmi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,13 +15,7 @@ import ProgressBar from "@/components/progress/ProgressBar";
 import { ChainButton } from "@/components/connectWallet/ChainButton";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
 
-import {
-  AlertCircle,
-  CarTaxiFront,
-  Monitor,
-  Redo,
-  Settings,
-} from "lucide-react";
+import { AlertCircle, Monitor, Redo, Settings } from "lucide-react";
 
 import {
   Card,
@@ -56,21 +50,57 @@ import Footer from "@/components/footer";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(1);
+  const [progress, setProgress] = useState(0);
   const [ismint, setIsMint] = useState(false);
   const [isburn, setIsBurn] = useState(false);
   const [istax, setIsTax] = useState(false);
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
 
   const card1Ref = useRef(null);
   const card2Ref = useRef(null);
   const card3Ref = useRef(null);
   const card4Ref = useRef(null);
+  const card5Ref = useRef(null);
 
-  const cardRefs = [card1Ref, card2Ref, card3Ref, card4Ref];
+  const cardRefs = [card1Ref, card2Ref, card3Ref, card4Ref, card5Ref];
+
+  const formSchema = ismint
+    ? baseTokenSchema.extend({
+        maxSupply: z.coerce.number().min(21000000, {
+          message: "Max supply must be at least greater than 21000000.",
+        }),
+      })
+    : baseTokenSchema;
+
+  const schema = istax
+    ? formSchema.extend({
+        buyTaxfee: z.coerce
+          .number()
+          .max(3, {
+            message: "Total supply must be at least less than 3%.",
+          })
+          .min(0, {
+            message: "Initial supply must be at least greater than 0.",
+          }),
+        sellTaxfee: z.coerce
+          .number()
+          .max(3, {
+            message: "Total supply must be at least less than 3%.",
+          })
+          .min(0, {
+            message: "Initial supply must be at least greater than 0.",
+          }),
+        liqidityShare: z.coerce.number().max(100, {
+          message: "Initial supply must be at least greater than 100%.",
+        }),
+        teamShare: z.coerce.number().max(100, {
+          message: "Initial supply must be at least greater than 100%.",
+        }),
+      })
+    : formSchema;
 
   const form = useForm<TokenFormValues>({
-    resolver: zodResolver(tokenSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
   });
 
@@ -79,15 +109,18 @@ export default function Page() {
     formState: { errors },
   } = form;
 
-  async function onSubmit(values: z.infer<typeof tokenSchema>) {
+  async function onSubmit(values: z.infer<typeof schema>) {
     const formvalue = form.getValues();
-    const res = await fetch(`/api/deploytoken`, {
+    const res = await fetch(`/api/home`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         formvalue,
+        mint: ismint,
+        burn: isburn,
+        tax: istax,
       }),
     });
     console.log(values);
@@ -320,7 +353,7 @@ export default function Page() {
                       {ismint && (
                         <FormField
                           control={form.control}
-                          name="maxsupply"
+                          name="maxSupply"
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
@@ -337,9 +370,14 @@ export default function Page() {
                       )}
                     </div>
                     <Switch
-                      onCheckedChange={() => {
-                        setIsMint(!ismint);
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setIsTax(false);
+                        }
+                        setIsMint(checked);
                       }}
+                      checked={ismint}
+                      disabled={istax}
                     />
                   </div>
                   <div className=" flex items-center space-x-4 rounded-md border p-4">
@@ -354,9 +392,14 @@ export default function Page() {
                       </p>
                     </div>
                     <Switch
-                      onCheckedChange={() => {
-                        setIsBurn(!isburn);
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setIsTax(false);
+                        }
+                        setIsBurn(checked);
                       }}
+                      checked={isburn}
+                      disabled={istax}
                     />
                   </div>
                   <div className=" flex items-center space-x-4 rounded-md border p-4">
@@ -371,64 +414,83 @@ export default function Page() {
                         supply.
                       </p>
                       {istax && (
-                        <FormField
-                          control={form.control}
-                          name="taxfee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  disabled={loading}
-                                  placeholder="Tax Fee"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
-                      {istax && (
-                        <FormField
-                          control={form.control}
-                          name="liqidityfee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  disabled={loading}
-                                  placeholder="Liquidity Fee"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
-                      {istax && (
-                        <FormField
-                          control={form.control}
-                          name="teamfee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  disabled={loading}
-                                  placeholder="Team Fee"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <>
+                          <FormField
+                            control={form.control}
+                            name="buyTaxfee"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    disabled={loading}
+                                    placeholder="Buy Tax Fee"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="sellTaxfee"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    disabled={loading}
+                                    placeholder="Sell Tax Fee"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="liqidityShare"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    disabled={loading}
+                                    placeholder="Liquidity Share"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="teamShare"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    disabled={loading}
+                                    placeholder="Team Share"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
                       )}
                     </div>
                     <Switch
-                      onCheckedChange={() => {
-                        setIsTax(!istax);
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setIsBurn(false);
+                          setIsMint(false);
+                        }
+                        setIsTax(checked);
                       }}
+                      checked={istax}
                     />
                   </div>
                 </div>
@@ -454,7 +516,7 @@ export default function Page() {
               </Card>
             </div>
             <Button
-              ref={card4Ref}
+              ref={card5Ref}
               className="my-4 bg-[#38e5ff]"
               onClick={() => onSubmit}
             >
