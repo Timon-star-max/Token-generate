@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { tokenSchema, type TokenFormValues } from "@/lib/form-schema";
 import { useAccount, useBalance } from "wagmi";
 
@@ -14,6 +13,7 @@ import { z } from "zod";
 import LoginAnimation from "@/components/animate/LoginAnimation";
 import ProgressBar from "@/components/progress/ProgressBar";
 import { ChainButton } from "@/components/connectWallet/ChainButton";
+import ImageUpload from "@/components/imageUpload/ImageUpload";
 
 import {
   AlertCircle,
@@ -436,6 +436,23 @@ export default function Page() {
               </CardContent>
               <CardFooter></CardFooter>
             </Card>
+            <div className="w-full px-4">
+              <Card
+                id="card4"
+                ref={card4Ref}
+                className="w-full my-4 border-[#05B7D1] rounded-3xl"
+              >
+                <CardHeader>
+                  <CardTitle>Token Logo</CardTitle>
+                  <CardDescription>Upload your token Logo.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col w-full">
+                    <ImageUpload></ImageUpload>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             <Button
               ref={card4Ref}
               className="my-4 bg-[#38e5ff]"
