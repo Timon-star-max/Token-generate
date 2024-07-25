@@ -2,7 +2,11 @@ import { useState, ChangeEvent } from "react";
 import styles from "./ImageUpload.module.css";
 import { Pencil } from "lucide-react";
 
-const ImageUpload: React.FC = () => {
+interface ImageUploadProps {
+  onFileSelect: (file: File) => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({ onFileSelect }) => {
   const [image, setImage] = useState<string | null>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -11,6 +15,7 @@ const ImageUpload: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result as string);
+        onFileSelect(file);
       };
       reader.readAsDataURL(file);
     }
@@ -26,7 +31,9 @@ const ImageUpload: React.FC = () => {
             accept=".png, .jpg, .jpeg"
             onChange={handleImageChange}
           />
-          <label htmlFor="imageUpload" className="flex"><Pencil className="mx-auto text-slate-500 mt-1"></Pencil></label>
+          <label htmlFor="imageUpload" className="flex">
+            <Pencil className="mx-auto text-slate-500 mt-1"></Pencil>
+          </label>
         </div>
         <div className={styles.avatarPreview}>
           <div
@@ -36,8 +43,7 @@ const ImageUpload: React.FC = () => {
                 image || "http://i.pravatar.cc/500?img=7"
               })`,
             }}
-          >
-          </div>
+          ></div>
         </div>
       </div>
     </div>

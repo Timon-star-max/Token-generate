@@ -14,6 +14,7 @@ import LoginAnimation from "@/components/animate/LoginAnimation";
 import ProgressBar from "@/components/progress/ProgressBar";
 import { ChainButton } from "@/components/connectWallet/ChainButton";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
+import { Supabase } from "@/utils/client";
 
 import { AlertCircle, Monitor, Redo, Settings } from "lucide-react";
 
@@ -42,7 +43,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
 
 import Header from "@/components/header";
@@ -54,7 +56,9 @@ export default function Page() {
   const [ismint, setIsMint] = useState(false);
   const [isburn, setIsBurn] = useState(false);
   const [istax, setIsTax] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { isConnected } = useAccount();
+  const { toast } = useToast();
 
   const card1Ref = useRef(null);
   const card2Ref = useRef(null);
@@ -110,20 +114,52 @@ export default function Page() {
   } = form;
 
   async function onSubmit(values: z.infer<typeof schema>) {
-    const formvalue = form.getValues();
-    const res = await fetch(`/api/home`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        formvalue,
-        mint: ismint,
-        burn: isburn,
-        tax: istax,
-      }),
-    });
-    console.log(values);
+    try {
+      setLoading(true);
+
+      if (selectedFile) {
+        const { data, error } = await Supabase.storage
+          .from("uploads")
+          .upload(`public/${selectedFile.name}`, selectedFile);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+      }
+      const formvalue = form.getValues();
+      const res = await fetch(`/api/home`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formvalue,
+          mint: ismint,
+          burn: isburn,
+          tax: istax,
+        }),
+      });
+
+      if (res.ok) {
+        toast({
+          variant: "default",
+          title: "Alert: Catch up",
+          description: `${formvalue.tokenName} Successfully Distributed.`,
+          action: (
+            <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+          ),
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Transaction Failed",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -510,7 +546,7 @@ export default function Page() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col w-full">
-                    <ImageUpload></ImageUpload>
+                    <ImageUpload onFileSelect={setSelectedFile}></ImageUpload>
                   </div>
                 </CardContent>
               </Card>
