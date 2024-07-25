@@ -70,13 +70,13 @@ export async function POST(req: Request) {
     burnable: burn,
     name: tokenName,
     ticker: tokenSymbol,
-    initialSupply: ethers.parseUnits(tokenInitsupply.toString(), tokenDecimals),
-    maxSupply: maxSupply && ethers.parseUnits(maxSupply.toString(), tokenDecimals),
+    initialSupply: ethers.parseUnits(tokenInitsupply.toString(), 18),
+    maxSupply: ethers.parseUnits(maxSupply.toString(), 18),
     taxToken: tax,
-    sellTax: tax && ethers.parseUnits(sellTaxfee?.toString() || "0", 18),
-    buyTax: tax && ethers.parseUnits(buyTaxfee?.toString() || "0", 18),
-    liquidityShare: tax && ethers.parseUnits(liqidityShare?.toString() || "0", 18),
-    teamShare: tax && ethers.parseUnits(teamShare?.toString() || "0", 18)
+    sellTax: ethers.parseUnits(sellTaxfee, 18),
+    buyTax: ethers.parseUnits(buyTaxfee, 18),
+    liquidityShare: ethers.parseUnits(liqidityShare, 18),
+    teamShare: ethers.parseUnits(teamShare, 18),
   };
 
   // Log params to help with debugging
