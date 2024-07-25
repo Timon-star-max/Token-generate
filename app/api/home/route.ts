@@ -56,12 +56,12 @@ export async function POST(req: Request) {
     name: tokenName,
     ticker: tokenSymbol,
     initialSupply: ethers.parseUnits(tokenInitsupply, tokenDecimals),
-    maxSupply: ethers.parseUnits(maxSupply, tokenDecimals),
+    maxSupply: ethers.parseUnits(maxSupply!, tokenDecimals),
     taxToken: false,
-    sellTax: ethers.parseUnits(sellTaxfee, 18),
-    buyTax: ethers.parseUnits(buyTaxfee, 18),
-    liquidityShare: ethers.parseUnits(liqidityShare, 18),
-    teamShare: ethers.parseUnits(teamShare, 18),
+    sellTax: ethers.parseUnits(sellTaxfee!, 18),
+    buyTax: ethers.parseUnits(buyTaxfee!, 18),
+    liquidityShare: ethers.parseUnits(liqidityShare!, 18),
+    teamShare: ethers.parseUnits(teamShare!, 18),
   };
 
   const tokenGeneratorContract = new ethers.Contract(
