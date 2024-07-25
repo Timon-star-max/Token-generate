@@ -40,6 +40,9 @@ export async function POST(req: Request) {
     sellTaxfee,
   } = formvalue;
 
+  // Log input values to help with debugging
+  console.log("Received form values:", formvalue);
+
   let index = 0;
   if (!mint && !burn && !tax) index = 0;
   if (mint && !burn && !tax) index = 1;
@@ -47,20 +50,37 @@ export async function POST(req: Request) {
   if (mint && burn && !tax) index = 3;
   if (!mint && !burn && tax) index = 4;
 
+  // Check and log all values before constructing the params object
+  console.log("Values before constructing params:", {
+    tokenName,
+    tokenSymbol,
+    tokenInitsupply,
+    tokenDecimals,
+    maxSupply,
+    liqidityShare,
+    teamShare,
+    buyTaxfee,
+    sellTaxfee,
+    index,
+  });
+
   const params = {
     factoryIndex: index,
     mintable: mint,
     burnable: burn,
     name: tokenName,
     ticker: tokenSymbol,
-    initialSupply: ethers.parseUnits(tokenInitsupply, tokenDecimals),
-    maxSupply: maxSupply ? ethers.parseUnits(maxSupply, tokenDecimals) : 0,
+    initialSupply: ethers.parseUnits(tokenInitsupply.toString(), tokenDecimals),
+    maxSupply: maxSupply ? ethers.parseUnits(maxSupply.toString(), tokenDecimals) : ethers.MaxUint256,
     taxToken: tax,
-    sellTax: tax ? ethers.parseUnits(sellTaxfee || "0", 18) : 0,
-    buyTax: tax ? ethers.parseUnits(buyTaxfee || "0", 18) : 0,
-    liquidityShare: tax ? ethers.parseUnits(liqidityShare || "0", 18) : 0,
-    teamShare: tax ? ethers.parseUnits(teamShare || "0", 18) : 0,
+    sellTax: tax ? ethers.parseUnits(sellTaxfee?.toString() || "0", 18) : ethers.MaxUint256,
+    buyTax: tax ? ethers.parseUnits(buyTaxfee?.toString() || "0", 18) : ethers.MaxUint256,
+    liquidityShare: tax ? ethers.parseUnits(liqidityShare?.toString() || "0", 18) : ethers.MaxUint256,
+    teamShare: tax ? ethers.parseUnits(teamShare?.toString() || "0", 18) : ethers.MaxUint256,
   };
+
+  // Log params to help with debugging
+  console.log("Constructed params:", params);
 
   const tokenGeneratorContract = new ethers.Contract(
     config.tokenGeneratorAddress,
