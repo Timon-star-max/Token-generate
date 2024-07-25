@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServiceRoleServerSupabaseClient } from "@/utils/client";
+// import { getServiceRoleServerSupabaseClient } from "@/utils/client";
 import { ethers } from "ethers";
 import TokenGeneratorABI from "@/utils/abi/origin.json";
 
@@ -26,7 +26,7 @@ async function getCreationFee(contract: any) {
 }
 
 export async function POST(req: Request) {
-  const srSupabase = getServiceRoleServerSupabaseClient();
+  // const srSupabase = getServiceRoleServerSupabaseClient();
   const json = await req.json();
   const { formvalue, mint, burn, tax } = json;
   
