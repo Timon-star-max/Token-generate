@@ -71,12 +71,12 @@ export async function POST(req: Request) {
     name: tokenName,
     ticker: tokenSymbol,
     initialSupply: ethers.parseUnits(tokenInitsupply.toString(), tokenDecimals),
-    maxSupply: maxSupply ? ethers.parseUnits(maxSupply.toString(), tokenDecimals) : ethers.MaxUint256,
+    maxSupply: maxSupply && ethers.parseUnits(maxSupply.toString(), tokenDecimals),
     taxToken: tax,
-    sellTax: tax ? ethers.parseUnits(sellTaxfee?.toString() || "0", 18) : ethers.MaxUint256,
-    buyTax: tax ? ethers.parseUnits(buyTaxfee?.toString() || "0", 18) : ethers.MaxUint256,
-    liquidityShare: tax ? ethers.parseUnits(liqidityShare?.toString() || "0", 18) : ethers.MaxUint256,
-    teamShare: tax ? ethers.parseUnits(teamShare?.toString() || "0", 18) : ethers.MaxUint256,
+    sellTax: tax && ethers.parseUnits(sellTaxfee?.toString() || "0", 18),
+    buyTax: tax && ethers.parseUnits(buyTaxfee?.toString() || "0", 18),
+    liquidityShare: tax && ethers.parseUnits(liqidityShare?.toString() || "0", 18),
+    teamShare: tax && ethers.parseUnits(teamShare?.toString() || "0", 18)
   };
 
   // Log params to help with debugging
