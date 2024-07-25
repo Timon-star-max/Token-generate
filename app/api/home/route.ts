@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-// import { getServiceRoleServerSupabaseClient } from "@/utils/client";
 import { ethers } from "ethers";
 import TokenGeneratorABI from "@/utils/abi/origin.json";
 
@@ -26,7 +25,6 @@ async function getCreationFee(contract: any) {
 }
 
 export async function POST(req: Request) {
-  // const srSupabase = getServiceRoleServerSupabaseClient();
   const json = await req.json();
   const { formvalue, mint, burn, tax } = json;
   
@@ -50,18 +48,18 @@ export async function POST(req: Request) {
   if (!mint && !burn && tax) index = 4;
 
   const params = {
-    factoryIndex: index, // Change this index based on your requirements
-    mintable: true,
-    burnable: false,
+    factoryIndex: index,
+    mintable: mint,
+    burnable: burn,
     name: tokenName,
     ticker: tokenSymbol,
     initialSupply: ethers.parseUnits(tokenInitsupply, tokenDecimals),
-    maxSupply: ethers.parseUnits(maxSupply!, tokenDecimals),
-    taxToken: false,
-    sellTax: ethers.parseUnits(sellTaxfee!, 18),
-    buyTax: ethers.parseUnits(buyTaxfee!, 18),
-    liquidityShare: ethers.parseUnits(liqidityShare!, 18),
-    teamShare: ethers.parseUnits(teamShare!, 18),
+    maxSupply: maxSupply ? ethers.parseUnits(maxSupply, tokenDecimals) : 0,
+    taxToken: tax,
+    sellTax: tax ? ethers.parseUnits(sellTaxfee || "0", 18) : 0,
+    buyTax: tax ? ethers.parseUnits(buyTaxfee || "0", 18) : 0,
+    liquidityShare: tax ? ethers.parseUnits(liqidityShare || "0", 18) : 0,
+    teamShare: tax ? ethers.parseUnits(teamShare || "0", 18) : 0,
   };
 
   const tokenGeneratorContract = new ethers.Contract(
@@ -76,15 +74,15 @@ export async function POST(req: Request) {
       value: creationFee,
     });
 
-    NextResponse.json({ status: 200, data: "success" });
-
     console.log("Transaction hash:", tx.hash);
 
     // Wait for the transaction to be mined
     const receipt = await tx.wait();
     console.log("Transaction mined:", receipt);
+
+    return NextResponse.json({ status: 200, data: "success" });
   } catch (error) {
     console.error("Error deploying token:", error);
-    NextResponse.json({ status: 500, data: "Transaction Error" });
+    return NextResponse.json({ status: 500, data: "Transaction Error" });
   }
 }
